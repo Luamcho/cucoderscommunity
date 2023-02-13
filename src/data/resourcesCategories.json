@@ -86,6 +86,12 @@
         "parentId": "webDevelpment",
         "slug": "componenetes-de-ui",
         "text": "Componenetes de UI"
+      },
+      {
+        "id": "frameworksCSS",
+        "parentId": "webDevelpment",
+        "slug": "frameworks-css",
+        "text": "Frameworks CSS"
       }
     ]
   },
@@ -203,6 +209,12 @@
         "parentId": "graphicResource",
         "slug": "iconos",
         "text": "Iconos"
+      },
+      {
+        "id": "colors",
+        "parentId": "graphicResource",
+        "slug": "colores",
+        "text": "Colores"
       },
       {
         "id": "illustrations",
