@@ -1,9 +1,9 @@
 ---
-import DirectoryLayout from "../../../layouts/directoryLayout.astro";
-import categories from "../../../data/profileCategories.json";
-import ProfileCard from "../../../components/profile/profileCard.astro";
-import Pagination from "../../../components/pagination.astro";
-import { members_api_url } from "../../../data/conf.json";
+import DirectoryLayout from "../../../../layouts/directoryLayout.astro";
+import categories from "../../../../data/profileCategories.json";
+import ProfileCard from "../../../../components/profile/profileCard.astro";
+import Pagination from "../../../../components/pagination.astro";
+import { members_api_url } from "../../../../data/conf.json";
 
 export async function getStaticPaths({ paginate }) {
   let allCategories = [];
@@ -19,8 +19,8 @@ export async function getStaticPaths({ paginate }) {
   return allCategories.map((categoryObj) => {
     let filteredMembers =
       categoryObj.key == "todos"
-        ? members_array
-        : members_array.filter((member) => member["categories"].includes(categoryObj.key));
+        ? members_array.filter((member) => member["hireable"])
+        : members_array.filter((member) => member["hireable"] && member["categories"].includes(categoryObj.key));
     const category = categoryObj.slug;
     return paginate(filteredMembers, {
       params: { category },
@@ -41,7 +41,9 @@ for (const [key, value] of Object.entries(categories)) {
 }
 ---
 
-<DirectoryLayout title={`Directorio de Desarrolladores Cubanos | ${category.text} | Página ${page.currentPage} | CuCoders`}>
+<DirectoryLayout
+  title=<DirectoryLayout title={`Directorio de Desarrolladores Cubanos Disponibles para Trabajar | ${category.text} | Página ${page.currentPage} | CuCoders`}>
+>
   {page.data.length == 0 && <img src="/assets/img/emptyList.webp" class="md:w-2/3 w-full mx-auto my-4" />}
   <div class="grid gap-6 w-full grid-cols-1 md:grid-cols-2 lg:grid-cols-3 mb-7">
     {page.data.map((profile) => <ProfileCard profile={profile} />)}
