@@ -3,6 +3,7 @@ import BaseLayout from "../layouts/baseLayout.astro";
 import CheckboxInput from "../components/forms/checkboxInput.astro";
 import UsernameInput from "../components/forms/usernameInput.astro";
 import TextInput from "../components/forms/textInput.astro";
+import Toast from "../components/toast/toast.astro";
 import "../styles/main.css";
 import categories from "../data/profileCategories.json";
 
@@ -14,7 +15,7 @@ for (const key in categories) {
 ---
 
 <BaseLayout
-  title="Publicar Nuevo Empleo"
+  title="Publicar Nuevo Empleo | CuCoders"
   description="Atrae al mejor talento de la tecnología con nuestras ofertas de empleo en CuCoders. Publica una nueva oferta y encuentra al candidato perfecto para tu empresa. ¡Descubre cómo puedes conectarte con la comunidad de programadores de Cuba y atraer al mejor talento hoy mismo en CuCoders!"
 >
   <div
@@ -74,65 +75,93 @@ for (const key in categories) {
       </div>
       <hr class="my-4" />
       <div class="grid gap-6 mb-6 md:grid-cols-3">
-        <TextInput id="appyEmail" label="Correo Electronico" maxlength="250" type="email" />
-        <TextInput id="appyUrl" label="URL para aplicar" maxlength="250" type="url" />
-        <UsernameInput id="appyapplyTelegramUser" label="Usuario de Telegram" maxlength="250" />
+        <TextInput id="applyEmail" label="Correo Electronico" maxlength="250" type="email" />
+        <TextInput id="applyUrl" label="URL para aplicar" maxlength="250" type="url" />
+        <UsernameInput id="applyTelegramUser" label="Usuario de Telegram" maxlength="250" />
       </div>
     </div>
 
     <div class="flex justify-center">
       <button
-        id="addEvent"
+        id="addJob"
         class="text-white mt-4 mx-2 bg-gray-800 hover:bg-gray-900 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-800"
         >Publicar Empleo</button
       >
     </div>
   </div>
 
-  <link href="https://cdn.jsdelivr.net/npm/tom-select/dist/css/tom-select.css" rel="stylesheet" />
-  <script is:inline src="https://cdn.jsdelivr.net/npm/tom-select/dist/js/tom-select.complete.min.js"></script>
-
-  <script is:inline>
-    var control = new TomSelect("#categories", { maxItems: 5 });
-  </script>
-
-  <script>
-    const resourceBtn = document.getElementById("addEvent");
-    resourceBtn.addEventListener("click", addEvent, true);
-
-    function addEvent() {
-      const fileName = getElem("name").value.replace(/\s/g, "-") + ".md";
-      const fileText = createResourceData();
-      const encodedFileText = encodeURIComponent(fileText);
-      const githubQueryLink = getFileRoute(fileName, encodedFileText);
-      window.open(githubQueryLink);
-    }
-
-    function getElem(id) {
-      return <HTMLInputElement>document.getElementById(id);
-    }
-
-    function createResourceData() {
-      return `---
-name: "${getElem("name").value}"
-description: "${getElem("description").value}"
-startDate: "${getElem("startDate").value}"
-endDate: "${getElem("endDate").value}"
-location: "${getElem("location").value}"
-image: "${getElem("image").value}"
-url: "${getElem("url").value}"
-virtual: ${getElem("virtual").checked}
-presential: ${getElem("presential").checked}
-pubDate: "${new Date().toDateString()}"
----
-
-Aqui va la descripción general del evento.`;
-    }
-
-    function getFileRoute(fileName, encodedFileText) {
-      let year = new Date().getFullYear();
-      let route = `https://github.com/CuCodersCommunity/cucoderscommunity.github.io/new/main/src/content/resources/${year}/new?value=${encodedFileText}&filename=${fileName}`;
-      return route;
-    }
-  </script>
+  <Toast />
 </BaseLayout>
+
+<link href="https://cdn.jsdelivr.net/npm/tom-select/dist/css/tom-select.css" rel="stylesheet" />
+<script is:inline src="https://cdn.jsdelivr.net/npm/tom-select/dist/js/tom-select.complete.min.js"></script>
+
+<script is:inline>
+  var control = new TomSelect("#categories", { maxItems: 5 });
+</script>
+
+<script>
+  import { backend_url } from "../data/conf.json";
+  import dayjs from "dayjs";
+  import { showToast } from "../components/toast/toast";
+  const resourceBtn = document.getElementById("addJob");
+  resourceBtn.addEventListener("click", addJob, true);
+
+  async function addJob() {
+    const data = createJobData();
+    disableBtn();
+    try {
+      const response = await fetch(backend_url + "api/jobs/new-job", {
+        method: "POST",
+        body: JSON.stringify(data),
+      });
+      const responseData = await response.json();
+      window.open(`${window.location.origin}/empleo-publicado`, "_self");
+    } catch (e) {
+      enableBtn();
+      showToast("Algo salio mal. Por favor vuelva a intentarlo más tarde.", true);
+    }
+  }
+
+  function getElem(id) {
+    return <HTMLInputElement>document.getElementById(id);
+  }
+
+  function createJobData() {
+    let data = {
+      title: getElem("title").value,
+      salary: getElem("salary").value,
+      description: getElem("description").value,
+      categories: [],
+      freelance: getElem("freelance").checked,
+      fulltime: getElem("fulltime").checked,
+      parttime: getElem("parttime").checked,
+      remote: getElem("remote").checked,
+      presential: getElem("presential").checked,
+      relocate: getElem("relocate").checked,
+      location: getElem("location").value,
+      pubDate: dayjs().format("MM/DD/YYYY"),
+      applyEmail: getElem("applyEmail").value,
+      applyUrl: getElem("applyUrl").value,
+      applyTelegramUser: getElem("applyTelegramUser").value,
+      slug: getElem("title").value.replace(/\s/g, "-"),
+    };
+
+    for (let option of document.getElementById("categories").options) {
+      if (option.selected) {
+        data.categories.push(option.value);
+      }
+    }
+    return data;
+  }
+
+  function disableBtn() {
+    resourceBtn.disabled = true;
+    resourceBtn.textContent = "Publicando...";
+  }
+
+  function enableBtn() {
+    resourceBtn.disabled = false;
+    resourceBtn.textContent = "Publicar Empleo";
+  }
+</script>
