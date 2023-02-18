@@ -1,18 +1,18 @@
 {
+  "fulltime": {
+    "slug": "tiempo-completo",
+    "text": "Tiempo Completo",
+    "ico": "/assets/img/icons/full-time.svg"
+  },
+  "parttime": {
+    "slug": "tiempo-parcial",
+    "text": "Tiempo Parcial",
+    "ico": "/assets/img/icons/part-time.svg"
+  },
   "freelance": {
     "slug": "freelance",
     "text": "Freelance",
     "ico": "/assets/img/icons/freelancer.svg"
-  },
-  "fulltime": {
-    "slug": "full-time",
-    "text": "Full-time",
-    "ico": "/assets/img/icons/full-time.svg"
-  },
-  "parttime": {
-    "slug": "part-time",
-    "text": "Part-time",
-    "ico": "/assets/img/icons/part-time.svg"
   },
   "remote": {
     "slug": "remoto",
@@ -25,8 +25,8 @@
     "ico": "/assets/img/icons/map.svg"
   },
   "relocate": {
-    "slug": "relocate",
-    "text": "Relocate",
+    "slug": "reubicacion",
+    "text": "Reubicación",
     "ico": "/assets/img/icons/relocate.svg"
   }
 }
