@@ -1,4 +1,5 @@
 ---
+import ReportModal from "../components/modals/reportModal.astro";
 import BaseLayout from "./baseLayout.astro";
 import ShareThisModal from "../components/helpers/shareThisModal.astro";
 import dayjs from "dayjs";
@@ -25,7 +26,12 @@ if (!post_data.image) {
 }
 ---
 
-<BaseLayout title={post_data.title + "| CuCoders"} description={description} image={post_data.image}>
+<BaseLayout
+  title={post_data.title + "| CuCoders"}
+  description={description}
+  image={post_data.image}
+  canonicalUrl={post_data.canonicalUrl}
+>
   <div
     class="bg-white border md:mx-auto mb-5 -mt-6 md:mt-12 lg:max-w-[58rem] border-gray-200 rounded-lg dark:bg-gray-800 dark:border-gray-700 w-full"
   >
@@ -55,7 +61,7 @@ if (!post_data.image) {
             class="inline-flex items-center p-2 text-sm font-medium text-center text-gray-900 bg-white rounded-lg hover:bg-gray-100 focus:ring-4 focus:outline-none dark:text-white focus:ring-gray-50 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
             type="button"
           >
-            <img src="/assets/img/icons/menu-vertical-black.svg" class="h-6 w-6" />
+            <img src="/assets/img/icons/menu-vertical-black.svg" class="h-6 w-6 min-w-[1.5rem]" />
           </button>
         </div>
 
@@ -83,8 +89,9 @@ if (!post_data.image) {
           </ul>
           <div class="py-1">
             <a
-              href="#"
-              class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
+              data-modal-target="reportModal"
+              data-modal-toggle="reportModal"
+              class="block px-4 cursor-pointer py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
               >Reportar</a
             >
           </div>
@@ -115,3 +122,4 @@ if (!post_data.image) {
 </BaseLayout>
 
 <ShareThisModal />
+<ReportModal />
