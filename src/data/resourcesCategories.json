@@ -188,6 +188,12 @@
         "parentId": "devTools",
         "slug": "monitoreadores",
         "text": "Monitoreadores"
+      },
+      {
+        "id": "devUtilities",
+        "parentId": "devTools",
+        "slug": "utilidades-desarrollo",
+        "text": "Utilidades"
       }
     ]
   },
@@ -272,6 +278,12 @@
         "parentId": "formation",
         "slug": "formacion-programacion",
         "text": "Programación"
+      },
+      {
+        "id": "formationDesing",
+        "parentId": "formation",
+        "slug": "formacion-diseño",
+        "text": "Diseño"
       }
     ]
   },
